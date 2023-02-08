@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs').promises;
+const crypto = require('crypto-js');
 
 const path = require('path');
 
@@ -20,6 +21,10 @@ async function readTalker() {
   }
 }
 
+function createToken(dataLogin) {
+  return crypto.AES.encrypt(dataLogin, 'encrypted key').toString().substring(0, 16);
+}
+
 app.get('/talker', async (_req, res) => {
   const talkers = await readTalker();
   return res.status(HTTP_OK_STATUS).json(talkers);
@@ -35,6 +40,12 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(404).json({
     message: 'Pessoa palestrante não encontrada',
   });
+});
+
+app.post('/login', (req, res) => {
+  const dataReq = JSON.stringify(req.body);
+  const token = createToken(dataReq);
+  return res.status(HTTP_OK_STATUS).json({ token });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
