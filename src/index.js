@@ -116,6 +116,16 @@ const validateRate = (req, res, next) => {
   next();
 };
 
+app.get('/talker/search', validateLoginTalker, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await readTalker();
+  if (!q) {
+    return res.status(HTTP_OK_STATUS).json(talkers);
+  }
+  const searchTalkers = talkers.filter((talker) => talker.name.includes(q));
+  return res.status(HTTP_OK_STATUS).json(searchTalkers);
+});
+
 app.get('/talker', async (_req, res) => {
   const talkers = await readTalker();
   return res.status(HTTP_OK_STATUS).json(talkers);
