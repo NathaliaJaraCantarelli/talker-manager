@@ -18,7 +18,7 @@ app.get('/talker', async (req, res) => {
   } catch (error) {
     console.error('Não foi possível ler o arquivo talker.json');
   }
-})
+});
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
